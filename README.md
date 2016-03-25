@@ -1,6 +1,8 @@
 # mawstats
-This script allows to compute some statistics using maw sofware [1] accessible here: https://github.com/solonas13/maw.
+This script computes some statistics related to the concept of minimal absent words "maws". 
+Specially, it computes maws of factors of words.
 
+This code uses the maw sofware [1] (accessible here: https://github.com/solonas13/maw) to compute the maws.
 Before you install mawstats, make sure you already have maw on your computer. Then, follow instructions from file INSTALL.
 
 
