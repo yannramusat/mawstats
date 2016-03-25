@@ -14,7 +14,7 @@ double gettime(void) {
     return ttime.tv_sec + ttime.tv_usec * 0.000001;
 }
 
-int readline(char * buffer, int size, FILE * file) {
+int readline(char *buffer, int size, FILE *file) {
 	int i = 0;
 	char c;
 	while ((c = fgetc(file)) != '\n' && c != EOF && i < size) {
@@ -48,7 +48,7 @@ char *itos(int n) {
 
 /* SPECIFIC FUNCTIONS */
 
-void proceed_word(FILE * fic, int n, int m, char * word) {
+void proceed_word(FILE *fic, int n, int m, char *word) { // TODO Verbose mode
 	static int index = 0;
 	fprintf(fic, ">%d\n", index);
 	fprintf(fic, "%.*s\n", n, word);
@@ -59,13 +59,39 @@ void proceed_word(FILE * fic, int n, int m, char * word) {
 	index++;
 }
 
-void generate_entry(FILE * fic, char * alphabet, int size_a, int n, int m, int cur, char * word) {
+void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
+	/* Parsing sequences */
+	char buffer[n+2];
+	readline(buffer, n+2, fic);
+	if(v) printf("Sequence no %s ", &buffer[1]);
+	fprintf(ficr, "Seq no %d ", atoi(&buffer[1]));
+	int num = 0;
+	while(readline(buffer, n+2, fic) != 0) num++;
+	if(v) printf("has %d maws.\n", num);
+	fprintf(ficr, "with %d maws. ", num);
+
+	/* Parsing sub-sequences */
+	for(int j = 0; j <= n-m; j++) {
+		readline(buffer, n+2, fic);
+		if(v) printf("	Sub no %s ", &buffer[1]);
+		int num2 = 0;
+		while(readline(buffer, n+2, fic) != 0) num2++;
+		if(v) printf("has %d maws.\n", num2);
+		fprintf(ficr, "%d ", num2);
+	}
+	fprintf(ficr, "\n");
+}
+
+void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, int cur, char *word, int action, int v) {
 	if(cur==n) {
-		proceed_word(fic, n, m, word);
+		if(action)
+			proceed_stat(fic, ficr, n, m, word, v);
+		else
+			proceed_word(fic, n, m, word);
 	} else {
 		for(int i = 0; i < size_a; i++) {
 			word[cur] = alphabet[i];
-			generate_entry(fic, alphabet, size_a, n, m, cur+1, word);	
+			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, cur+1, word, action, v);	
 		}
 	}
 }

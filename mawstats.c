@@ -19,12 +19,11 @@
 #define RESULT "results.out"
 
 int main(int argc, char **argv) {
-	int n = 8;		// length of the text
-	int m = 3;		// length of the pattern
-	int v = 0;		// verbose
-	
-	int size_a = 2;
-	char * alphabet = "AC";
+	int n = 8;					// length of the text
+	int m = 3;					// length of the pattern
+	int v = 0;					// verbose
+	int size_a = 2;				// alphabet size
+	char * alphabet = "AC";		// alphabet
 
 	/* Parsing options */
 	while(1) {
@@ -57,10 +56,10 @@ int main(int argc, char **argv) {
 				fprintf (stdout, "  -h, 			Display help.\n");
 				exit(1);
 		}
-	} 
+	}
 
 	/* Generating directory */
-	char * dir_name;
+	char *dir_name;
 	size_t sz;
 	double datedir = gettime();
 	sz = snprintf(NULL, 0, "%d-%d-%d-%f", n, m, size_a, datedir);
@@ -82,10 +81,10 @@ int main(int argc, char **argv) {
 
 	/* Generating test */
 	double start = gettime();
-	FILE* fic = fopen(to_dir(dir_name, QUERY_IN), "w+");
+	FILE *fic = fopen(to_dir(dir_name, QUERY_IN), "w+");
 	if(fic != NULL) {	
 		char word[n];
-		generate_entry(fic, alphabet, size_a, n, m, 0, word);
+		generate_entry_stats(fic, NULL, alphabet, size_a, n, m, 0, word, 0, v); // TODO Verbose mode
 		fclose(fic);
 	} else {
 		printf("Cannot open fic to gen queries.\n");
@@ -117,31 +116,10 @@ int main(int argc, char **argv) {
 		wait(NULL);		
 		printf("Computation succeed.\nBegin parsing results..\n");
 		fic = fopen(to_dir(dir_name, QUERY_OUT), "r");
-		FILE * ficr = fopen(to_dir(dir_name, RESULT), "w+");
+		FILE *ficr = fopen(to_dir(dir_name, RESULT), "w+");
 		if (fic != NULL && ficr != NULL) {
-			/* Parsing results */
-			for(int i = 0; i < (1 << n); i++) {					
-				/* Parsing sequences */
-				char buffer[n+2];
-				readline(buffer, n+2, fic);
-				if(v) printf("Sequence no %s ", &buffer[1]);
-				fprintf(ficr, "Seq no %d ", atoi(&buffer[1]));
-				int num = 0;
-				while(readline(buffer, n+2, fic) != 0) num++;
-				if(v) printf("has %d maws.\n", num);
-				fprintf(ficr, "with %d maws. ", num);
-
-				/* Parsing sub-sequences */
-				for(int j = 0; j <= n-m; j++) {
-					readline(buffer, n+2, fic);
-					if(v) printf("	Sub no %s ", &buffer[1]);
-					int num2 = 0;
-					while(readline(buffer, n+2, fic) != 0) num2++;
-					if(v) printf("has %d maws.\n", num2);
-					fprintf(ficr, "%d ", num2);
-				}
-				fprintf(ficr, "\n");
-			}
+			char word[n];
+			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);
 			fclose(fic);
 			fclose(ficr);
 		}
