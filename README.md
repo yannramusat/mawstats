@@ -1,9 +1,9 @@
 # mawstats
 Computing statistics over MAWs.
 
-This script allows to compute some statistics using the MAW sofware [1], accessible here: https://github.com/solonas13/maw.
+This script allows to compute some statistics using the MAW [1] sofware accessible here: https://github.com/solonas13/maw.
 
-You need to install MAW on your computer and then follow the instructions in the file INSTALL.
+You need to install first MAW on your computer and then follow the instructions in the file INSTALL.
 
 
 
