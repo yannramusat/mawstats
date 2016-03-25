@@ -1,0 +1,17 @@
+Pre-installation Instructions
+=============================
+
+   This installation requires the pre-installation of the `maw' tool,
+please consult https://github.com/solonas13/maw.
+
+Basic Instructions
+==================
+
+	Please create a directory named `mawstats' where you have maw 
+installed. Put the code here, and then use shell command `make'.
+
+	After compilation the binary `mawstats' will be created in the 
+working directory, e.g. you may call it from this directory via
+ $ ./mawstats
+
+Note: You can use -h option to get helped.
