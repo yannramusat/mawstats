@@ -1,9 +1,9 @@
 MF=			makefile
 CC=			gcc
 EXE=    	mawstats
-SRC=		mawstats.c functions.c
+SRC=		mawstats.c functions.c chainedlist.c
 OBJ= 		$(SRC:.c=.o)
-HD=			functions.h
+HD=			functions.h chainedlist.h
 CFLAGS=		-std=c99 -Wall
 LDFLAGS=	-std=c99
 

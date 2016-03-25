@@ -11,6 +11,7 @@
 #include <getopt.h>
 
 #include "functions.h"
+#include "chainedlist.h"
 
 #define QUERY_IN "gen_test.in"
 #define QUERY_OUT "gen_test.out"
