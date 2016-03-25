@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 
 	/* Parsing options */
 	while(1) {
-		int opt = getopt(argc, argv, "l:L:a:vs:");
+		int opt = getopt(argc, argv, "l:L:a:s:vh");
 		if(opt < 0) break;
 		switch(opt) {
 			case 'L': 
@@ -36,22 +36,24 @@ int main(int argc, char **argv) {
 			case 'l': 
 				m = atoi(optarg);
 				break;
-			case 'v':
-				v = 1;
-				break;
 			case 'a':
 				alphabet = optarg;
 				break;
 			case 's':
 				size_a = atoi(optarg);
 				break;
+			case 'v':
+				v = 1;
+				break;
+			case 'h':
 			default:
 				fprintf (stdout, " Usage: %s\n", argv[0]);
-				fprintf (stdout, "  -a,	<bool>	Specify the alphabet.		Default value: AC\n");
-				fprintf (stdout, "  -s,	<int>	Alphabet size.			Default value: 2\n");
-				fprintf (stdout, "  -v,	<bool>	Verbose mode.			Default value: false\n");
-				fprintf (stdout, "  -l,	<int>	The pattern length.		Default value: 3\n");
-				fprintf (stdout, "  -L,	<int>	The text length.		Default value: 8\n");
+				fprintf (stdout, "  -l,	<int>		The pattern length.	Default value: 3\n");
+				fprintf (stdout, "  -L,	<int>		The text length.	Default value: 8\n");
+				fprintf (stdout, "  -a,	<string>	Specify the alphabet.	Default value: AC\n");
+				fprintf (stdout, "  -s,	<int>		Alphabet size.		Default value: 2\n");
+				fprintf (stdout, "  -v,			Verbose mode.		Default: off\n");
+				fprintf (stdout, "  -h, 			Display help.\n");
 				exit(1);
 		}
 	} 
