@@ -7,6 +7,7 @@
 
 #include "functions.h"
 #include "chainedlist.h"
+#include "compressedtree.h"
 
 extern list_word list;
 extern int num_elements;
