@@ -117,10 +117,12 @@ void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int
 	}
 }
 
-void display_stats(int size_a, int n, int m) {
+void display_stats(int size_a, int n, int m, FILE *fics) {
 	double divi = pow(size_a, n);
 	moyL /= divi;
 	moyl /= divi;
-	printf("moyL=%f, moyl=%f, max=%d\n", moyL, moyl, max_sum);
-	print_list(list, stdout);
+	fprintf(fics, "%f %f %d\n", moyL, moyl, max_sum);
+	print_list(list, fics, 0);
+	printf("MoyL=%f, Moyl=%f, Max=%d\n", moyL, moyl, max_sum);
+	print_list(list, stdout, 1);
 }

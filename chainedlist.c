@@ -11,6 +11,7 @@ list_word add_last(list_word list, const char * word_to_add, int ind, int L) {
 	newElement->word = (char *)malloc(L);
     strcpy(newElement->word, word_to_add);
 	newElement->index = ind;
+	newElement->length = L;
     newElement->nxt = NULL;
     if(list == NULL) {
 		num_elements++;
@@ -26,11 +27,12 @@ list_word add_last(list_word list, const char * word_to_add, int ind, int L) {
     }
 }
 
-void print_list(list_word list, FILE * stats_fic) {
+void print_list(list_word list, FILE * stats_fic, int v) {
     element_word *tmp = list;
-	fprintf(stats_fic, "n %d\n", num_elements);
+	if(v) fprintf(stats_fic, "n %d\n", num_elements);
+	else fprintf(stats_fic, "%d\n", num_elements);
     while(tmp != NULL) {
-        fprintf(stats_fic, "%s %d\n", tmp->word, tmp->index);
+        fprintf(stats_fic, "%.*s %d\n", tmp->length, tmp->word, tmp->index);
         tmp = tmp->nxt;
     }
 }

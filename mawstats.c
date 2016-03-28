@@ -17,6 +17,7 @@
 #define QUERY_OUT "gen_test.out"
 #define MAW_OUT "maw.out"
 #define RESULT "results.out"
+#define STATS "stats.out"
 
 list_word list = NULL;
 double moyl = 0;
@@ -125,10 +126,12 @@ int main(int argc, char **argv) {
 		FILE *ficr = fopen(to_dir(dir_name, RESULT), "w+");
 		if (fic != NULL && ficr != NULL) {
 			char word[n];
-			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);
-			display_stats(size_a, n, m); // TODO Write in a file
+			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);		
 			fclose(fic);
 			fclose(ficr);
+			FILE *fics = fopen(to_dir(dir_name, STATS), "w+");
+			display_stats(size_a, n, m, fics);
+			fclose(fics);
 		}
 		else {
 			printf("Cannot open out file or create result file.\n");
