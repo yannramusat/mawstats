@@ -9,6 +9,8 @@
 #include "chainedlist.h"
 
 extern list_word list;
+extern int num_elements;
+extern list_word list_d;
 extern double moyl;
 extern double moyL;
 extern int max_sum;
@@ -94,11 +96,11 @@ void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
 	fprintf(ficr, "\n");
 	if(tot > max_sum) {
 		max_sum = tot;
-		list = del_list(list);
-		list = add_last(list, word, index, n);
+		list = del_list(list, &num_elements);
+		list = add_last(list, word, index, n, &num_elements);
 	}
 	else if(tot == max_sum) {
-		list = add_last(list, word, index, n);
+		list = add_last(list, word, index, n, &num_elements);
 	}
 	index++;
 }
@@ -112,7 +114,7 @@ void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int
 	} else {
 		for(int i = 0; i < size_a; i++) {
 			word[cur] = alphabet[i];
-			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, cur+1, word, action, v);	
+			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, cur+1, word, action, v);
 		}
 	}
 }
@@ -122,7 +124,7 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	moyL /= divi;
 	moyl /= divi;
 	fprintf(fics, "%f %f %d\n", moyL, moyl, max_sum);
-	print_list(list, fics, 0);
-	printf("MoyL=%f, Moyl=%f, Max=%d\n", moyL, moyl, max_sum);
-	print_list(list, stdout, 1);
+	print_list(list, fics, &num_elements, 0);
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum);
+	print_list(list, stdout, &num_elements, 1);
 }

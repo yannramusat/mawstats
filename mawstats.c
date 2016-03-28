@@ -20,6 +20,8 @@
 #define STATS "stats.out"
 
 list_word list = NULL;
+int num_elements = 0;
+list_word list_d = NULL;
 double moyl = 0;
 double moyL = 0;
 int max_sum = 0;
