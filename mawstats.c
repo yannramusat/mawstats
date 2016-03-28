@@ -18,6 +18,12 @@
 #define MAW_OUT "maw.out"
 #define RESULT "results.out"
 
+list_word list = NULL;
+double moyl = 0;
+double moyL = 0;
+int max_sum = 0;
+int max_distinct = 0;
+
 int main(int argc, char **argv) {
 	int n = 8;					// length of the text
 	int m = 3;					// length of the pattern
@@ -120,6 +126,7 @@ int main(int argc, char **argv) {
 		if (fic != NULL && ficr != NULL) {
 			char word[n];
 			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);
+			display_stats(size_a, n, m); // TODO Write in a file
 			fclose(fic);
 			fclose(ficr);
 		}

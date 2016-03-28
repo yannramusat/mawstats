@@ -3,8 +3,16 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include <math.h>
 
 #include "functions.h"
+#include "chainedlist.h"
+
+extern list_word list;
+extern double moyl;
+extern double moyL;
+extern int max_sum;
+extern int max_distinct;
 
 /* GENERAL FUNCTIONS */
 
@@ -60,17 +68,20 @@ void proceed_word(FILE *fic, int n, int m, char *word) { // TODO Verbose mode
 }
 
 void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
+	static int index = 0;
 	/* Parsing sequences */
 	char buffer[n+2];
 	readline(buffer, n+2, fic);
 	if(v) printf("Sequence no %s ", &buffer[1]);
-	fprintf(ficr, "Seq no %d ", atoi(&buffer[1]));
+	fprintf(ficr, "%d ", atoi(&buffer[1]));
 	int num = 0;
 	while(readline(buffer, n+2, fic) != 0) num++;
 	if(v) printf("has %d maws.\n", num);
-	fprintf(ficr, "with %d maws. ", num);
+	fprintf(ficr, "%d ", num);
+	moyL += num;
 
 	/* Parsing sub-sequences */
+	int tot = 0;
 	for(int j = 0; j <= n-m; j++) {
 		readline(buffer, n+2, fic);
 		if(v) printf("	Sub no %s ", &buffer[1]);
@@ -78,8 +89,18 @@ void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
 		while(readline(buffer, n+2, fic) != 0) num2++;
 		if(v) printf("has %d maws.\n", num2);
 		fprintf(ficr, "%d ", num2);
+		moyl += num2; tot += num2;
 	}
 	fprintf(ficr, "\n");
+	if(tot > max_sum) {
+		max_sum = tot;
+		list = del_list(list);
+		list = add_last(list, word, index, n);
+	}
+	else if(tot == max_sum) {
+		list = add_last(list, word, index, n);
+	}
+	index++;
 }
 
 void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, int cur, char *word, int action, int v) {
@@ -94,4 +115,12 @@ void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int
 			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, cur+1, word, action, v);	
 		}
 	}
+}
+
+void display_stats(int size_a, int n, int m) {
+	double divi = pow(size_a, n);
+	moyL /= divi;
+	moyl /= divi;
+	printf("moyL=%f, moyl=%f, max=%d\n", moyL, moyl, max_sum);
+	print_list(list, stdout);
 }
