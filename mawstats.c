@@ -35,6 +35,16 @@ int main(int argc, char **argv) {
 	int size_a = 2;				// alphabet size
 	char * alphabet = "AC";		// alphabet
 
+	/*ctree tree = init_ctree(size_a);
+	int nbrelem = 0;
+	add_word(tree, alphabet, size_a, "ACACACAC", 0, 8, &nbrelem);
+	add_word(tree, alphabet, size_a, "ACC", 0, 3, &nbrelem);
+	add_word(tree, alphabet, size_a, "ACACACAA", 0, 8, &nbrelem);
+	add_word(tree, alphabet, size_a, "ACACACAA", 0, 8, &nbrelem);
+	char word[8];
+	printf("%d\n", nbrelem);
+	print_ctree(tree, alphabet, size_a, word, 0);*/
+
 	/* Parsing options */
 	while(1) {
 		int opt = getopt(argc, argv, "l:L:a:s:vh");
@@ -135,8 +145,7 @@ int main(int argc, char **argv) {
 			FILE *fics = fopen(to_dir(dir_name, STATS), "w+");
 			display_stats(size_a, n, m, fics);
 			fclose(fics);
-		}
-		else {
+		} else {
 			printf("Cannot open out file or create result file.\n");
 			exit(1);
 		}
