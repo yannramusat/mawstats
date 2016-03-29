@@ -107,7 +107,7 @@ void proceed_stat(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int 
 		printf("There are %d distincts ones:\n", nbrelem);
 		print_ctree(tree, alphabet, size_a, word, 0);
 	}
-	fprintf(ficr, "\n");
+	fprintf(ficr, "%d \n", nbrelem);
 	if(tot > max_sum) {
 		max_sum = tot;
 		list = del_list(list, &num_elements);
@@ -147,8 +147,11 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	fprintf(fics, "%f %f %d %d\n", moyL, moyl, max_sum, max_distinct);
 	print_list(list, fics, &num_elements, 0);
 	print_list(list_d, fics, &num_elements_d, 0);
-	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d, Maw_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum, max_distinct);
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d, Max_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum, max_distinct);
 	print_list(list, stdout, &num_elements, 1);
 	printf("List of elements reaching the maximum number of maws (distincts):\n");
 	print_list(list_d, stdout, &num_elements_d, 1);
+
+	// TODO MOY DISTINCT
+	// TODO PRINT DISTINCT FOR EACH WORD
 }

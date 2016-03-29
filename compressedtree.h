@@ -1,6 +1,7 @@
 typedef struct node_ctree node_ctree;
 struct node_ctree {
     node_ctree **sons;
+	int pointed;
 };
 typedef node_ctree* ctree;
 
