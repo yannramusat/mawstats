@@ -12,6 +12,7 @@
 extern list_word list;
 extern int num_elements;
 extern list_word list_d;
+extern int num_elements_d;
 extern double moyl;
 extern double moyL;
 extern int max_sum;
@@ -70,7 +71,7 @@ void proceed_word(FILE *fic, int n, int m, char *word) { // TODO Verbose mode
 	index++;
 }
 
-void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
+void proceed_stat(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, char *word, int v) {
 	static int index = 0;
 	/* Parsing sequences */
 	char buffer[n+2];
@@ -84,32 +85,51 @@ void proceed_stat(FILE *fic, FILE *ficr, int n, int m, char *word, int v) {
 	moyL += num;
 
 	/* Parsing sub-sequences */
+	ctree tree = init_ctree(size_a);
+	int nbrelem = 0;
 	int tot = 0;
 	for(int j = 0; j <= n-m; j++) {
 		readline(buffer, n+2, fic);
 		if(v) printf("	Sub no %s ", &buffer[1]);
 		int num2 = 0;
-		while(readline(buffer, n+2, fic) != 0) num2++;
-		if(v) printf("has %d maws.\n", num2);
+		int lr;
+		while((lr = readline(buffer, n+2, fic)) != 0) {
+			add_word(tree, alphabet, size_a, buffer, 0, lr, &nbrelem);
+			num2++;
+		}
+		if(v) {
+			printf("has %d maws.\n", num2);
+		}
 		fprintf(ficr, "%d ", num2);
 		moyl += num2; tot += num2;
+	}
+	if(v) {
+		printf("There are %d distincts ones:\n", nbrelem);
+		print_ctree(tree, alphabet, size_a, word, 0);
 	}
 	fprintf(ficr, "\n");
 	if(tot > max_sum) {
 		max_sum = tot;
 		list = del_list(list, &num_elements);
 		list = add_last(list, word, index, n, &num_elements);
-	}
-	else if(tot == max_sum) {
+	} else if(tot == max_sum) {
 		list = add_last(list, word, index, n, &num_elements);
 	}
+	if(nbrelem > max_distinct) {
+		max_distinct = nbrelem;
+		list_d = del_list(list_d, &num_elements_d);
+		list_d = add_last(list_d, word, index, n, &num_elements_d);
+	} else if(nbrelem == max_distinct) {
+		list_d = add_last(list_d, word, index, n, &num_elements_d);
+	}
+	// TODO VIDER CTREE
 	index++;
 }
 
 void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, int cur, char *word, int action, int v) {
 	if(cur==n) {
 		if(action)
-			proceed_stat(fic, ficr, n, m, word, v);
+			proceed_stat(fic, ficr, alphabet, size_a, n, m, word, v);
 		else
 			proceed_word(fic, n, m, word);
 	} else {
@@ -124,8 +144,11 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	double divi = pow(size_a, n);
 	moyL /= divi;
 	moyl /= divi;
-	fprintf(fics, "%f %f %d\n", moyL, moyl, max_sum);
+	fprintf(fics, "%f %f %d %d\n", moyL, moyl, max_sum, max_distinct);
 	print_list(list, fics, &num_elements, 0);
-	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum);
+	print_list(list_d, fics, &num_elements_d, 0);
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d, Maw_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum, max_distinct);
 	print_list(list, stdout, &num_elements, 1);
+	printf("List of elements reaching the maximum number of maws (distincts):\n");
+	print_list(list_d, stdout, &num_elements_d, 1);
 }

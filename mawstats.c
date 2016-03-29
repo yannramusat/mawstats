@@ -23,6 +23,7 @@
 list_word list = NULL;
 int num_elements = 0;
 list_word list_d = NULL;
+int num_elements_d = 0;
 double moyl = 0;
 double moyL = 0;
 int max_sum = 0;
@@ -34,16 +35,6 @@ int main(int argc, char **argv) {
 	int v = 0;					// verbose
 	int size_a = 2;				// alphabet size
 	char * alphabet = "AC";		// alphabet
-
-	/*ctree tree = init_ctree(size_a);
-	int nbrelem = 0;
-	add_word(tree, alphabet, size_a, "ACACACAC", 0, 8, &nbrelem);
-	add_word(tree, alphabet, size_a, "ACC", 0, 3, &nbrelem);
-	add_word(tree, alphabet, size_a, "ACACACAA", 0, 8, &nbrelem);
-	add_word(tree, alphabet, size_a, "ACACACAA", 0, 8, &nbrelem);
-	char word[8];
-	printf("%d\n", nbrelem);
-	print_ctree(tree, alphabet, size_a, word, 0);*/
 
 	/* Parsing options */
 	while(1) {
