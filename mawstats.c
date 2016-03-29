@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
 		FILE *ficr = fopen(to_dir(dir_name, RESULT), "w+");
 		if (fic != NULL && ficr != NULL) {
 			char word[n];
-			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);		
+			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);	// TODO PRINT DISTINCT FOR EACH WORD	
 			fclose(fic);
 			fclose(ficr);
 			FILE *fics = fopen(to_dir(dir_name, STATS), "w+");

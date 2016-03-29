@@ -153,5 +153,4 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	print_list(list_d, stdout, &num_elements_d, 1);
 
 	// TODO MOY DISTINCT
-	// TODO PRINT DISTINCT FOR EACH WORD
 }

@@ -27,7 +27,7 @@ int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, in
 				return add_word(tree->sons[index], alphabet, size_a, word, current+1, n, num_elements);
 			} 
 		} else {
-			printf("Adding word in CT: letter doesn't recognized.\n");
+			printf("Adding word to CT: the letter doesn't belong to the alphabet.\n");
 			return -1;
 		}
 	} else {
