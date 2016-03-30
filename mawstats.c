@@ -19,6 +19,7 @@
 #define MAW_OUT "maw.out"
 #define RESULT "results.out"
 #define STATS "stats.out"
+#define DISTINCT "distinct.out"
 
 list_word list = NULL;
 int num_elements = 0;
@@ -95,7 +96,7 @@ int main(int argc, char **argv) {
 	FILE *fic = fopen(to_dir(dir_name, QUERY_IN), "w+");
 	if(fic != NULL) {	
 		char word[n];
-		generate_entry_stats(fic, NULL, alphabet, size_a, n, m, 0, word, 0, v); // TODO Verbose mode
+		generate_entry_stats(fic, NULL, NULL, alphabet, size_a, n, m, 0, word, 0, v); // TODO Verbose mode
 		fclose(fic);
 	} else {
 		printf("Cannot open fic to gen queries.\n");
@@ -128,11 +129,13 @@ int main(int argc, char **argv) {
 		printf("Computation succeed.\nBegin parsing results..\n");
 		fic = fopen(to_dir(dir_name, QUERY_OUT), "r");
 		FILE *ficr = fopen(to_dir(dir_name, RESULT), "w+");
+		FILE *ficd = fopen(to_dir(dir_name, DISTINCT), "w+");
 		if (fic != NULL && ficr != NULL) {
 			char word[n];
-			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, 0, word, 1, v);	// TODO PRINT DISTINCT FOR EACH WORD	
+			generate_entry_stats(fic, ficr, ficd, alphabet, size_a, n, m, 0, word, 1, v);	
 			fclose(fic);
 			fclose(ficr);
+			fclose(ficd);
 			FILE *fics = fopen(to_dir(dir_name, STATS), "w+");
 			display_stats(size_a, n, m, fics);
 			fclose(fics);

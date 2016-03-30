@@ -71,7 +71,7 @@ void proceed_word(FILE *fic, int n, int m, char *word) { // TODO Verbose mode
 	index++;
 }
 
-void proceed_stat(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, char *word, int v) {
+void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a, int n, int m, char *word, int v) {
 	static int index = 0;
 	/* Parsing sequences */
 	char buffer[n+2];
@@ -103,11 +103,13 @@ void proceed_stat(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int 
 		fprintf(ficr, "%d ", num2);
 		moyl += num2; tot += num2;
 	}
+	fprintf(ficr, "%d \n", nbrelem);
 	if(v) {
 		printf("There are %d distincts ones:\n", nbrelem);
-		print_ctree(tree, alphabet, size_a, word, 0);
+		print_ctree(tree, stdout, alphabet, size_a, word, 0);
 	}
-	fprintf(ficr, "%d \n", nbrelem);
+	fprintf(ficd, "%d %d\n", index, nbrelem);
+	print_ctree(tree, ficd, alphabet, size_a, word, 0);
 	if(tot > max_sum) {
 		max_sum = tot;
 		list = del_list(list, &num_elements);
@@ -126,16 +128,16 @@ void proceed_stat(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int 
 	index++;
 }
 
-void generate_entry_stats(FILE *fic, FILE *ficr, char *alphabet, int size_a, int n, int m, int cur, char *word, int action, int v) {
+void generate_entry_stats(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a, int n, int m, int cur, char *word, int action, int v) {
 	if(cur==n) {
 		if(action)
-			proceed_stat(fic, ficr, alphabet, size_a, n, m, word, v);
+			proceed_stat(fic, ficr, ficd, alphabet, size_a, n, m, word, v);
 		else
 			proceed_word(fic, n, m, word);
 	} else {
 		for(int i = 0; i < size_a; i++) {
 			word[cur] = alphabet[i];
-			generate_entry_stats(fic, ficr, alphabet, size_a, n, m, cur+1, word, action, v);
+			generate_entry_stats(fic, ficr, ficd, alphabet, size_a, n, m, cur+1, word, action, v);
 		}
 	}
 }

@@ -39,16 +39,16 @@ int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, in
 
 // TODO Implementer del_ctree
 
-void print_ctree(ctree tree, char *alphabet, int size_a, char *word, int current) {
+void print_ctree(ctree tree, FILE * distinct_fic, char *alphabet, int size_a, char *word, int current) {
 	int see = 0;
 	for(int i = 0; i < size_a; i++) {
 		if(tree->sons[i] != NULL) {
 			see = 1;
 			word[current] = alphabet[i];
-			print_ctree(tree->sons[i], alphabet, size_a, word, current+1);
+			print_ctree(tree->sons[i], distinct_fic, alphabet, size_a, word, current+1);
 		}
 	}
 	if(!see || tree->pointed) {
-		printf("%.*s\n", current, word);
+		fprintf(distinct_fic, "%.*s\n", current, word);
 	}
 }
