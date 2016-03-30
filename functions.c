@@ -138,7 +138,7 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 	} else if(nbrelem == max_distinct) {
 		list_d = add_last(list_d, word, index, n, &num_elements_d);
 	}
-	// TODO VIDER CTREE
+	del_ctree(tree, size_a);
 	index++;
 }
 

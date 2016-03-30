@@ -7,7 +7,7 @@
 ctree init_ctree(int size_a) {
 	ctree newElement = (ctree)malloc(sizeof(node_ctree));
 	newElement->pointed = 0;
-	newElement->sons = (ctree)malloc(sizeof(node_ctree)*size_a);
+	newElement->sons = (ctree *)malloc(sizeof(node_ctree)*size_a);
 	for(int i = 0; i < size_a; i++) newElement->sons[i] = NULL;
 	return newElement;
 }
@@ -37,7 +37,13 @@ int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, in
 	}
 }
 
-// TODO Implementer del_ctree
+void del_ctree(ctree tree, int size_a) {
+	for(int i = 0; i < size_a; i++) {
+		if(tree->sons[i] != NULL) del_ctree(tree->sons[i], size_a);
+	}
+	free(tree->sons);
+	free(tree);
+}
 
 void print_ctree(ctree tree, FILE * distinct_fic, char *alphabet, int size_a, char *word, int current) {
 	int see = 0;

@@ -41,6 +41,7 @@ list_word del_list(list_word list, int *num_elements) {
     } else {
         element_word *tmp;
         tmp = list->nxt;
+		free(list->word);
         free(list);
 		*num_elements = 0;
         return del_list(tmp, num_elements);
