@@ -25,9 +25,12 @@ list_word list = NULL;
 int num_elements = 0;
 list_word list_d = NULL;
 int num_elements_d = 0;
+list_word list_m = NULL;
+int num_elements_m = 0;
 double moyl = 0;
 double moyL = 0;
 double moyd = 0;
+int max_maw = 0;
 int max_sum = 0;
 int max_distinct = 0;
 

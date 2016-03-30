@@ -13,9 +13,12 @@ extern list_word list;
 extern int num_elements;
 extern list_word list_d;
 extern int num_elements_d;
+extern list_word list_m;
+extern int num_elements_m;
 extern double moyl;
 extern double moyL;
 extern double moyd;
+extern int max_maw;
 extern int max_sum;
 extern int max_distinct;
 
@@ -79,14 +82,20 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 	/* Parsing sequences */
 	char buffer[n+2];
 	readline(buffer, n+2, fic);
-	if(v) printf("Sequence no %s ", &buffer[1]);
+	if(v) printf("Sequence no %s (%.*s)", &buffer[1], n, word);
 	fprintf(ficr, "%d ", atoi(&buffer[1]));
 	int num = 0;
 	while(readline(buffer, n+2, fic) != 0) num++;
 	if(v) printf("has %d maws.\n", num);
 	fprintf(ficr, "%d ", num);
 	moyL += num;
-
+	if(num > max_maw) {
+		max_maw = num;
+		list_m = del_list(list_m, &num_elements_m);
+		list_m = add_last(list_m, word, index, n, &num_elements_m);
+	} else if(num == max_maw) {
+		list_m = add_last(list_m, word, index, n, &num_elements_m);
+	}
 	/* Parsing sub-sequences */
 	ctree tree = init_ctree(size_a);
 	int nbrelem = 0;
@@ -107,13 +116,14 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 		moyl += num2; tot += num2;
 	}
 	moyd += nbrelem;
-	fprintf(ficr, "%d \n", nbrelem);
+	fprintf(ficr, "%d %d \n", tot, nbrelem);
+	char printing_word[n+2];
 	if(v) {
 		printf("There are %d distincts ones:\n", nbrelem);
-		print_ctree(tree, stdout, alphabet, size_a, word, 0);
+		print_ctree(tree, stdout, alphabet, size_a, printing_word, 0);
 	}
 	fprintf(ficd, "%d %d\n", index, nbrelem);
-	print_ctree(tree, ficd, alphabet, size_a, word, 0);
+	print_ctree(tree, ficd, alphabet, size_a, printing_word, 0);
 	if(tot > max_sum) {
 		max_sum = tot;
 		list = del_list(list, &num_elements);
@@ -152,12 +162,16 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	moyl /= divi;
 	moyd /= divi;
 	// FIC
-	fprintf(fics, "%f %f %f %d %d\n", moyL, moyl, moyd, max_sum, max_distinct);
+	fprintf(fics, "%f %f %f %d %d %d\n", moyL, moyl, moyd, max_maw, max_sum, max_distinct);
+	print_list(list_m, fics, &num_elements_m, 0);
 	print_list(list, fics, &num_elements, 0);
 	print_list(list_d, fics, &num_elements_d, 0);
 	// STDOUT
-	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Moyd= %f, Max=%d, Max_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, moyd, max_sum, max_distinct);
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Moyd= %f, Max=%d, Max_no_distinct=%d, Max_distinct=%d\n", moyL, moyl, moyd, max_maw, max_sum, max_distinct);
+	printf("List of elements reaching the maximum number of maws:\n");
+	print_list(list_m, stdout, &num_elements_m, 1);
+	printf("List of elements reaching the maximum number of sub_maws (not distincts):\n");
 	print_list(list, stdout, &num_elements, 1);
-	printf("List of elements reaching the maximum number of maws (distincts):\n");
+	printf("List of elements reaching the maximum number of sub_maws (distincts):\n");
 	print_list(list_d, stdout, &num_elements_d, 1);
 }
