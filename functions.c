@@ -15,6 +15,7 @@ extern list_word list_d;
 extern int num_elements_d;
 extern double moyl;
 extern double moyL;
+extern double moyd;
 extern int max_sum;
 extern int max_distinct;
 
@@ -60,13 +61,15 @@ char *itos(int n) {
 
 /* SPECIFIC FUNCTIONS */
 
-void proceed_word(FILE *fic, int n, int m, char *word) { // TODO Verbose mode
+void proceed_word(FILE *fic, int n, int m, char *word, int v) {
 	static int index = 0;
 	fprintf(fic, ">%d\n", index);
 	fprintf(fic, "%.*s\n", n, word);
+	if(v) printf(">%d\n%.*s\n", index, n, word);
 	for(int j = 0; j <= n-m; j++) {
 		fprintf(fic, ">%d-%d\n", index, j);
 		fprintf(fic, "%.*s\n", m, &(word[j]));
+		if(v) printf(">%d-%d\n%.*s\n", index, j, m, &(word[j]));
 	}
 	index++;
 }
@@ -103,6 +106,7 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 		fprintf(ficr, "%d ", num2);
 		moyl += num2; tot += num2;
 	}
+	moyd += nbrelem;
 	fprintf(ficr, "%d \n", nbrelem);
 	if(v) {
 		printf("There are %d distincts ones:\n", nbrelem);
@@ -133,7 +137,7 @@ void generate_entry_stats(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int
 		if(action)
 			proceed_stat(fic, ficr, ficd, alphabet, size_a, n, m, word, v);
 		else
-			proceed_word(fic, n, m, word);
+			proceed_word(fic, n, m, word, v);
 	} else {
 		for(int i = 0; i < size_a; i++) {
 			word[cur] = alphabet[i];
@@ -146,13 +150,14 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	double divi = pow(size_a, n);
 	moyL /= divi;
 	moyl /= divi;
-	fprintf(fics, "%f %f %d %d\n", moyL, moyl, max_sum, max_distinct);
+	moyd /= divi;
+	// FIC
+	fprintf(fics, "%f %f %f %d %d\n", moyL, moyl, moyd, max_sum, max_distinct);
 	print_list(list, fics, &num_elements, 0);
 	print_list(list_d, fics, &num_elements_d, 0);
-	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Max=%d, Max_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, max_sum, max_distinct);
+	// STDOUT
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Moyd= %f, Max=%d, Max_distinct=%d\nList of elements reaching the maximum number of maws (not distincts):\n", moyL, moyl, moyd, max_sum, max_distinct);
 	print_list(list, stdout, &num_elements, 1);
 	printf("List of elements reaching the maximum number of maws (distincts):\n");
 	print_list(list_d, stdout, &num_elements_d, 1);
-
-	// TODO MOY DISTINCT
 }

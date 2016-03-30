@@ -27,6 +27,7 @@ list_word list_d = NULL;
 int num_elements_d = 0;
 double moyl = 0;
 double moyL = 0;
+double moyd = 0;
 int max_sum = 0;
 int max_distinct = 0;
 
@@ -87,16 +88,16 @@ int main(int argc, char **argv) {
 	}
 
 	/* Printed messages */
-	printf("Processing with text-length %d and pattern-length %d..\n", n, m);
+	printf("Processing with text-length %d and pattern-length %d.\n", n, m);
 	printf("Alphabet is %s of size %d.\n", alphabet, size_a);
-	printf("Writing in directory %s.\n", dir_name);
+	printf("Writing in directory %s..\n", dir_name);
 
 	/* Generating test */
 	double start = gettime();
 	FILE *fic = fopen(to_dir(dir_name, QUERY_IN), "w+");
 	if(fic != NULL) {	
 		char word[n];
-		generate_entry_stats(fic, NULL, NULL, alphabet, size_a, n, m, 0, word, 0, v); // TODO Verbose mode
+		generate_entry_stats(fic, NULL, NULL, alphabet, size_a, n, m, 0, word, 0, v);
 		fclose(fic);
 	} else {
 		printf("Cannot open fic to gen queries.\n");
