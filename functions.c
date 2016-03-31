@@ -15,12 +15,16 @@ extern list_word list_d;
 extern int num_elements_d;
 extern list_word list_m;
 extern int num_elements_m;
+extern list_word list_c;
+extern int num_elements_c;
 extern double moyl;
 extern double moyL;
 extern double moyd;
+extern double moyc;
 extern int max_maw;
 extern int max_sum;
 extern int max_distinct;
+extern int max_changes;
 
 /* GENERAL FUNCTIONS */
 
@@ -82,7 +86,7 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 	/* Parsing sequences */
 	char buffer[n+2];
 	readline(buffer, n+2, fic);
-	if(v) printf("Sequence no %s (%.*s)", &buffer[1], n, word);
+	if(v) printf("Sequence no %s (%.*s) ", &buffer[1], n, word);
 	fprintf(ficr, "%d ", atoi(&buffer[1]));
 	int num = 0;
 	while(readline(buffer, n+2, fic) != 0) num++;
@@ -100,13 +104,15 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 	ctree tree = init_ctree(size_a);
 	int nbrelem = 0;
 	int tot = 0;
+	int lastnum = 0;
+	int changes = 0;
 	for(int j = 0; j <= n-m; j++) {
 		readline(buffer, n+2, fic);
 		if(v) printf("	Sub no %s ", &buffer[1]);
 		int num2 = 0;
 		int lr;
 		while((lr = readline(buffer, n+2, fic)) != 0) {
-			add_word(tree, alphabet, size_a, buffer, 0, lr, &nbrelem);
+			add_word(tree, alphabet, size_a, buffer, 0, lr, &nbrelem, j+2, &lastnum);
 			num2++;
 		}
 		if(v) {
@@ -114,6 +120,19 @@ void proceed_stat(FILE *fic, FILE *ficr, FILE *ficd, char *alphabet, int size_a,
 		}
 		fprintf(ficr, "%d ", num2);
 		moyl += num2; tot += num2;
+		changes += lastnum;
+		lastnum = num2;
+	}
+	moyc += changes;
+	if(changes > max_changes) {
+	max_changes = changes;
+	list_c = del_list(list_c, &num_elements_c);
+	list_c = add_last(list_c, word, index, n, &num_elements_c);
+	} else if(changes == max_changes) {
+		list_c = add_last(list_c, word, index, n, &num_elements_c);
+	}
+	if(v) {
+		printf("Changes: %d\n", changes);
 	}
 	moyd += nbrelem;
 	fprintf(ficr, "%d %d \n", tot, nbrelem);
@@ -161,17 +180,21 @@ void display_stats(int size_a, int n, int m, FILE *fics) {
 	moyL /= divi;
 	moyl /= divi;
 	moyd /= divi;
+	moyc /= divi;
 	// FIC
-	fprintf(fics, "%f %f %f %d %d %d\n", moyL, moyl, moyd, max_maw, max_sum, max_distinct);
+	fprintf(fics, "%f %f %f %f %d %d %d %d\n", moyL, moyl, moyd, moyc, max_maw, max_sum, max_distinct, max_changes);
 	print_list(list_m, fics, &num_elements_m, 0);
 	print_list(list, fics, &num_elements, 0);
 	print_list(list_d, fics, &num_elements_d, 0);
+	print_list(list_c, fics, &num_elements_c, 0);
 	// STDOUT
-	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Moyd= %f, Max=%d, Max_no_distinct=%d, Max_distinct=%d\n", moyL, moyl, moyd, max_maw, max_sum, max_distinct);
+	printf("=== Stats ===\nMoyL=%f, Moyl=%f, Moyd= %f, Moyc=%f, Max=%d, Max_no_distinct=%d, Max_distinct=%d, Max_changes=%d\n", moyL, moyl, moyd, moyc, max_maw, max_sum, max_distinct, max_changes);
 	printf("List of elements reaching the maximum number of maws:\n");
 	print_list(list_m, stdout, &num_elements_m, 1);
 	printf("List of elements reaching the maximum number of sub_maws (not distincts):\n");
 	print_list(list, stdout, &num_elements, 1);
 	printf("List of elements reaching the maximum number of sub_maws (distincts):\n");
 	print_list(list_d, stdout, &num_elements_d, 1);
+	printf("List of elements reaching the maximum number of changes:\n");
+	print_list(list_c, stdout, &num_elements_c, 1);
 }

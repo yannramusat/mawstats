@@ -12,7 +12,7 @@ ctree init_ctree(int size_a) {
 	return newElement;
 }
 
-int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, int n, int *num_elements) {
+int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, int n, int *num_elements, int pt_val, int *diff) {
 	if(current < n) {
 		char letter = word[current];
 		int index = -1;
@@ -22,9 +22,9 @@ int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, in
 		if(index != -1) {		
 			if(tree->sons[index] == NULL) {
 				tree->sons[index] = init_ctree(size_a);
-				return add_word(tree->sons[index], alphabet, size_a, word, current+1, n, num_elements);
+				return add_word(tree->sons[index], alphabet, size_a, word, current+1, n, num_elements, pt_val, diff);
 			} else {			
-				return add_word(tree->sons[index], alphabet, size_a, word, current+1, n, num_elements);
+				return add_word(tree->sons[index], alphabet, size_a, word, current+1, n, num_elements, pt_val, diff);
 			} 
 		} else {
 			printf("Adding word to CT: the letter doesn't belong to the alphabet.\n");
@@ -32,7 +32,9 @@ int add_word(ctree tree, char *alphabet, int size_a, char *word, int current, in
 		}
 	} else {
 		if(!tree->pointed) (*num_elements)++;
-		tree->pointed = 1;
+		if(tree->pointed==pt_val-1) (*diff)--;
+		else (*diff)++;
+		tree->pointed = pt_val;
 		return 0;
 	}
 }
