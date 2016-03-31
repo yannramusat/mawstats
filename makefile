@@ -3,7 +3,7 @@ CC=			gcc
 EXE=    	mawstats
 SRC=		mawstats.c functions.c chainedlist.c compressedtree.c
 OBJ= 		$(SRC:.c=.o)
-HD=			functions.h chainedlist.h compressedtree.h
+HD=			defs.h functions.h chainedlist.h compressedtree.h
 CFLAGS=		-std=c99 -Wall
 LDFLAGS=	-std=c99 -Wall -lm
 

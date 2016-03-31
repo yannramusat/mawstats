@@ -13,26 +13,7 @@
 #include "functions.h"
 #include "chainedlist.h"
 #include "compressedtree.h"
-
-#define QUERY_IN "gen_test.in"
-#define QUERY_OUT "gen_test.out"
-#define MAW_OUT "maw.out"
-#define RESULT "results.out"
-#define STATS "stats.out"
-#define DISTINCT "distinct.out"
-
-list_word list = NULL;
-int num_elements = 0;
-list_word list_d = NULL;
-int num_elements_d = 0;
-list_word list_m = NULL;
-int num_elements_m = 0;
-double moyl = 0;
-double moyL = 0;
-double moyd = 0;
-int max_maw = 0;
-int max_sum = 0;
-int max_distinct = 0;
+#include "defs.h"
 
 int main(int argc, char **argv) {
 	int n = 8;					// length of the text
@@ -129,7 +110,7 @@ int main(int argc, char **argv) {
 			exit(1);
 		}
     } else { // RESULT PART
-		wait(NULL);		
+		wait(NULL);
 		printf("Computation succeed.\nBegin parsing results..\n");
 		fic = fopen(to_dir(dir_name, QUERY_OUT), "r");
 		FILE *ficr = fopen(to_dir(dir_name, RESULT), "w+");
